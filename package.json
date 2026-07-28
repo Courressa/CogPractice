@@ -1,5 +1,14 @@
 {
   "name": "cogpractice",
   "version": "1.0.0",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "server": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
 }
