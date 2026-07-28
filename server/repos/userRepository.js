@@ -12,6 +12,17 @@ users.set(adminUser.getUsername(), adminUser);
 users.set(customer1.getUsername(), customer1);
 users.set(customer2.getUsername(), customer2);
 
+export const getUserProfile = (username) => {
+    const user = users.get(username);
+    if (!user) return null;
+
+    return {
+        id: user.getId(),
+        username: user.getUsername(),
+        isAdmin: user.getIsAdmin()
+    };
+}
+
 export const findByUsername = (username) => {
     return users.get(username) || null;
 }
@@ -19,7 +30,8 @@ export const findByUsername = (username) => {
 export const findByID = (id) => {
     for (const [key, value] of users) {
         if (value.getId() === id) {
-            return findByUsername(key);
+            const user = getUserProfile(key);
+            return user;
         }
     }
     
@@ -39,17 +51,6 @@ export const save = (user) => {
     } else {
         return "Already exists";
     }
-}
-
-export const getUserProfile = (username) => {
-    const user = users.get(username);
-    if (!user) return null;
-
-    return {
-        id: user.getId(),
-        username: user.getUsername(),
-        isAdmin: user.getIsAdmin()
-    };
 }
 
 export const getAllCustomers = () => {

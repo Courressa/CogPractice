@@ -66,6 +66,7 @@ export const updatePassword = async (username, password) => {
     }
 
     return {
+        message: "Password updated successfully.",
         user: payload
     }
 }
