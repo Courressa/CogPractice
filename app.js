@@ -265,10 +265,35 @@ class CheckingAccount extends Account {
     }
 
     printInterestRate() {
-        console.log(`Checking interest rate: ${(this.getInterestRate() * 100).toFixed(2)}%`);
+        console.log(`Checking Account interest rate: ${(this.getInterestRate() * 100).toFixed(2)}%`);
     }
-}
+};
 
+class SavingAccount extends Account {
+    constructor (accountNumber, owner) {
+        // Interest 3.5%
+        super(accountNumber, owner, 0.035);
+    }
+
+    deposit(amount) {
+        if (amount <= 0) throw new Error("Deposit must be positive");
+        this._addToBalance(amount);
+    }
+
+    withdraw(amount) {
+        if (amount <= 0) throw new Error("Withdrawal must be positive");
+        this._subtractFromBalance(amount);
+    }
+
+    transfer(amount, targetAccount) {
+        this.withdraw(amount);
+        targetAccount.deposit(amount);
+    }
+
+    printInterestRate() {
+        console.log(`Saving Account interest rate: ${(this.getInterestRate() * 100).toFixed(2)}%`);
+    }
+};
 
 app().catch((err) => {
     console.error(err);
