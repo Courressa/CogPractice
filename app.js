@@ -2,76 +2,7 @@
 import readline from 'readline';
 import { stdin as input, stdout as output } from 'process';
 
-const rl = readline.createInterface({ input, output });
-const exampleUsers = new Map();
-
-exampleUsers.set("admin", "admin123");
-exampleUsers.set("test", "test123");
-exampleUsers.set("someUser", "someUser123");
-
-const askUser = (questionToAsk) => {
-    return new Promise((resolve, reject) => {
-        rl.question(questionToAsk, (answer) => {
-            
-            resolve(answer);
-        });
-    });
-};
-
-const login = async () => {
-    const userlogin = await askUser("Please enter your username and password separated by a space ");
-
-    const loginInfo = userlogin.split(" ");
-    const username = loginInfo[0];
-    const password = loginInfo[1];
-
-    for (const [key, value] of exampleUsers) {
-        if ((key === username) && (value === password)) {
-            return username;
-        }
-    }
-
-    return "";
-};
-
-const adminDashboard = (username) => {
-    console.log(`Hi ${username}! Welcome to your admin dashboard!`);
-    console.log("What would you like to do?");
-    console.log("1. View your profile?");
-}
-
-const userDashboard = (username) => {
-    console.log(`Hi ${username}! Welcome to your user dashboard!`);
-    
-}
-
-// Entry point
-const app = async () => {
-    console.log("Welcome to the bank!");
-    
-    let running = true;
-
-    while (running) {
-        const loggedInUsername = await login();
-        if (loggedInUsername === "") {
-            console.log("Invalid login credentials.");
-        } else if (loggedInUsername === "admin") {
-            adminDashboard(loggedInUsername);
-        } else {
-            userDashboard(loggedInUsername);
-        }
-
-        const wantsToCont = await askUser("Would you like to continue? (Y/N) ");
-
-        if (wantsToCont.toUpperCase() === "N") {
-            running = false;
-            rl.close();
-        }
-    
-    }
-};
-
-//Class Bank
+// Class Bank
 class Bank {
     // # Makes it private
     #id;
@@ -292,6 +223,138 @@ class SavingAccount extends Account {
 
     printInterestRate() {
         console.log(`Saving Account interest rate: ${(this.getInterestRate() * 100).toFixed(2)}%`);
+    }
+};
+
+
+const rl = readline.createInterface({ input, output });
+const users = new Map();
+const accounts = new Map();
+let nextAccountNumber = 1;
+
+const adminUser = new Admin("admin", "admin123");
+const customer1 = new Customer("test", "test123");
+const customer2 = new Customer("someUser", "someUser123");
+
+users.set(adminUser.getUsername(), adminUser);
+users.set(customer1.getUsername(), customer1);
+users.set(customer2.getUsername(), customer2);
+
+const askUser = (questionToAsk) => {
+    return new Promise((resolve, reject) => {
+        rl.question(questionToAsk, (answer) => {
+            
+            resolve(answer);
+        });
+    });
+};
+
+const login = async () => {
+    const userlogin = await askUser("Please enter your username and password separated by a space ");
+
+    const loginInfo = userlogin.trim().split(" ");
+    const username = loginInfo[0];
+    const password = loginInfo[1];
+
+    const user = users.get(username);
+
+    if (user && user.getPassword() === password) {
+        return user;               // return the whole object
+    }
+
+    return null;
+};
+
+const redirect = async (user) => {
+    if (!user) {
+        console.log("Invalid login credentials.");
+        return;
+    } 
+    
+    if (user.getIsAdmin()) {
+        await adminDashboard(user);
+    } else {
+        await userDashboard(user);
+    }
+}
+
+const adminDashboard = (user) => {
+    console.log(`Hi ${user.getUsername()}! Welcome to your admin dashboard!`);
+    console.log("What would you like to do?");
+    console.log("1. View your profile?");
+}
+
+const userDashboard = async (user) => {
+    let inDashboard = true;
+
+    while (inDashboard) {
+        console.log(`\nHi ${user.getUsername()}! Welcome to your user dashboard!`);
+        console.log("1. Create a checking account");
+        console.log("2. Create a saving account");
+        console.log("3. View your accounts");
+        console.log("4. Log out");
+
+        const userAction = await askUser("What would you like to do? (Please enter only a number from the list)\n\n");
+
+        // Get the user's current accounts (or empty array if none)
+        const userAccounts = accounts.get(user.getUsername()) || [];
+
+        switch (userAction.trim()) {
+            case "1":
+                const checking = new CheckingAccount(nextAccountNumber++, user.getUsername());
+                userAccounts.push(checking);
+                accounts.set(user.getUsername(), userAccounts);
+
+                console.log(`Checking account created! Account #${checking.getAccountNumber()}`);
+                break;
+            case "2":
+                const saving = new SavingAccount(nextAccountNumber++, user.getUsername());
+                userAccounts.push(saving);
+                accounts.set(user.getUsername(), userAccounts);
+
+                console.log(`Saving account created! Account #${saving.getAccountNumber()}`);
+                break;
+            case "3":
+                if (userAccounts.length === 0) {
+                    console.log("You have no accounts yet.");
+                } else {
+                    console.log("\nYour accounts:");
+                    userAccounts.forEach((acc, index) => {
+                        console.log(
+                            `${index + 1}. Account #${acc.getAccountNumber()} | ` +
+                            `Balance: $${acc.getBalance().toFixed(2)}`
+                        );
+                        acc.printInterestRate();
+                    });
+                }
+                break;
+            case "4":
+                console.log("Have a good day!");
+                inDashboard = false;
+                break;
+            default:
+                console.log("Invalid option!");
+                break;
+        }
+    }
+}
+
+// ======== Entry Point ======== //
+const app = async () => {
+    console.log("Welcome to the bank!");
+    
+    let running = true;
+
+    while (running) {
+        const user = await login();
+        await redirect(user);
+
+        const wantsToCont = await askUser("\nWould you like to continue? (Y/N) ");
+
+        if (wantsToCont.trim().toUpperCase() === "N") {
+            running = false;
+            rl.close();
+        }
     }
 };
 
