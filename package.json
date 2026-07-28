@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "server": "nodemon app.js"
+    "server": "nodemon server/app.js"
   },
   "dependencies": {
     "express": "^5.2.1"
