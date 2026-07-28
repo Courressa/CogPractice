@@ -2,6 +2,7 @@ import Customer from "../models/Customer.js";
 import Admin from "../models/Admin.js";
 
 const users = new Map();
+let idIncrement = 4;
 
 const adminUser = new Admin(1, "admin", "admin123");
 const customer1 = new Customer(2, "test", "test123");
@@ -16,6 +17,25 @@ export const findByUsername = (username) => {
 }
 
 export const save = (user) => {
-    users.set(user.getUsername(), user);
-    return user;
+    //Prevents creating users with duplicate username
+    if (!findByUsername(user.username)) {
+        const assignedId = idIncrement++;
+        user.setId(assignedId);
+        users.set(user.getUsername(), user);
+        return user;
+    } else {
+        return "Already exists";
+    }
+}
+
+export const getAllCustomers = () => {
+    const customers = [];
+
+    for (const [, value] of users) {
+        if (value.getIsAdmin() === false) {
+            customers.push(value);
+        }
+    }
+
+    return customers;
 }
