@@ -73,6 +73,7 @@ const app = async () => {
 
 //Class Bank
 class Bank {
+    // # Makes it private
     #id;
     #name;
 
@@ -104,9 +105,9 @@ class Bank {
 //Class Customer extends User
 
 class User {
-    username;
+    #username;
     #password;
-    isAdmin;
+    #isAdmin;
     
     constructor(username, password, {isAdmin = false} = {}) {
         // Prevent direct instantiation
@@ -114,9 +115,33 @@ class User {
             throw new TypeError("Cannot instantiate abstract class 'User' directly.");
         }
 
-        this.username = username;
-        this.password = password;
-        this.isAdmin = isAdmin;
+        this.#username = username;
+        this.#password = password;
+        this.#isAdmin = isAdmin;
+    }
+
+    getUsername() {
+        return this.#username;
+    }
+
+    setUsername(username) {
+        this.#username = username;
+    }
+
+    getPassword() {
+        return this.#password;
+    }
+
+    setPassword(password) {
+        this.#password = password;
+    } 
+
+    getIsAdmin() {
+        return this.#isAdmin;
+    }
+
+    setIsAdmin(isAdmin) {
+        this.#isAdmin = isAdmin;
     }
 }
 
@@ -136,6 +161,8 @@ class Customer extends User {
 //CheckingsAccount extends Account
 //SavingsAccount extends Account
 class Account {
+    #type;
+    #total;
     constructor() {
         if (new.target === Account) {
             throw new TypeError("Cannot instantiate abstract class 'Account' directly.");
