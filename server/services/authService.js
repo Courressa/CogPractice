@@ -1,19 +1,4 @@
-import { findByUsername, save } from "../repos/userRepository.js";
-
-export const createCustomer = async (user) => {
-    const payload = await save(user);
-
-    if (payload === "Already exists") {
-        const error = new Error("This username already exists.");
-        error.statusCode = 409;
-        throw error;
-    }
-
-    return {
-        message: "User created successfully.",
-        username: payload.username
-    }
-}
+import { findByUsername } from "../repos/userRepository.js";
 
 const authenticateUser = async (username, password) => {
     const user = await findByUsername(username);

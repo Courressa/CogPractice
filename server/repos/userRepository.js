@@ -16,12 +16,25 @@ export const findByUsername = (username) => {
     return users.get(username) || null;
 }
 
+export const findByID = (id) => {
+    for (const [key, value] of users) {
+        if (value.getId() === id) {
+            return findByUsername(key);
+        }
+    }
+    
+    return null;
+}
+
 export const save = (user) => {
+    const username = user.getUsername ? user.getUsername() : user.username;
+
     //Prevents creating users with duplicate username
-    if (!findByUsername(user.username)) {
+    if (!findByUsername(username)) {
         const assignedId = idIncrement++;
-        user.setId(assignedId);
-        users.set(user.getUsername(), user);
+        
+        user.setId?.(assignedId);
+        users.set(username, user);
         return user;
     } else {
         return "Already exists";
@@ -49,4 +62,31 @@ export const getAllCustomers = () => {
     }
 
     return customers;
+}
+
+export const forgotPassword = (username, password) => {
+    const user = findByUsername(username);
+    if (!user) return null;
+
+    if (user.getPassword() === password) {
+        return "Password already in use";
+    }
+
+    user.setPassword(password);
+
+    return {
+        id: user.getId(),
+        username: username
+    }
+}
+
+export const removeUser = (id) => {
+    const user = findByID(id);
+
+    if (!user) return null;
+
+    const username = user.getUsername();
+    users.delete(username);
+
+    return `${username} removed successfully.`;
 }

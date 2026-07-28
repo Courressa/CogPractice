@@ -1,10 +1,7 @@
 import express from "express";
-import { customerLogin, adminLogin, registerCustomer } from "../controllers/authController.js";
+import { customerLogin, adminLogin } from "../controllers/authController.js";
 
 const router = express.Router();
-
-//POST - /api/v1/auth/register - register customer - PUBLIC
-router.post("/register", registerCustomer);
 
 //POST - /api/v1/auth/login - login customer - PUBLIC
 router.post("/login", customerLogin);
