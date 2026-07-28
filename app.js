@@ -71,15 +71,47 @@ const app = async () => {
     }
 };
 
+//Class Bank
+class Bank {
+    #id;
+    #name;
+
+    constructor(id, name) {
+        this.#id = id;
+        this.#name = name;
+    }
+
+    getId() {
+        return this.#id;
+    };
+
+    setId(id) {
+        this.#id = id;
+    };
+
+    getName() {
+        return this.#name;
+    }
+
+    setName(name) {
+        this.#name = name;
+    }
+}
+
+
 //Abstract Class User: username, password, isAdmin:true/false
 //Class Admin extends User
 //Class Customer extends User
 
 class User {
+    username;
+    #password;
+    isAdmin;
+    
     constructor(username, password, {isAdmin = false} = {}) {
         // Prevent direct instantiation
         if (new.target === User) {
-        throw new TypeError("Cannot instantiate abstract class 'User' directly.");
+            throw new TypeError("Cannot instantiate abstract class 'User' directly.");
         }
 
         this.username = username;
@@ -103,6 +135,13 @@ class Customer extends User {
 //Abstract Class Account
 //CheckingsAccount extends Account
 //SavingsAccount extends Account
+class Account {
+    constructor() {
+        if (new.target === Account) {
+            throw new TypeError("Cannot instantiate abstract class 'Account' directly.");
+        }
+    }
+}
 
 //Interface AccountOperations: printInterestRate(), deposit, withdraw, transfer
 //SavingsAccount always gives higher interest rate
