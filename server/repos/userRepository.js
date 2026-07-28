@@ -28,12 +28,23 @@ export const save = (user) => {
     }
 }
 
+export const getUserProfile = (username) => {
+    const user = users.get(username);
+    if (!user) return null;
+
+    return {
+        id: user.getId(),
+        username: user.getUsername(),
+        isAdmin: user.getIsAdmin()
+    };
+}
+
 export const getAllCustomers = () => {
     const customers = [];
 
-    for (const [, value] of users) {
+    for (const [key, value] of users) {
         if (value.getIsAdmin() === false) {
-            customers.push(value);
+            customers.push(getUserProfile(key));
         }
     }
 

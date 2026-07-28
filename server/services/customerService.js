@@ -1,6 +1,6 @@
-import { getAllCustomers } from "../repos/userRepository";
+import { getAllCustomers } from "../repos/userRepository.js";
 
-const getAllCust = () => {
+export const getAllCust = async () => {
     const payload = await getAllCustomers();
 
     if (!payload) {
@@ -8,7 +8,7 @@ const getAllCust = () => {
         error.statusCode = 404;
         throw error;
     }
-    
+
     return {
         customers: payload
     }

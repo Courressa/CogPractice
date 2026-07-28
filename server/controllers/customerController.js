@@ -1,6 +1,6 @@
 import { getAllCust } from "../services/customerService.js";
 
-export const getAllCustomersCont = (req, res) => {
+export const getAllCustomersCont = async (req, res) => {
     try {
         const result = await getAllCust();
 
