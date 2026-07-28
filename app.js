@@ -71,61 +71,41 @@ const app = async () => {
     }
 };
 
+//Abstract Class User: username, password, isAdmin:true/false
+//Class Admin extends User
+//Class Customer extends User
+
 class User {
-    constructor(username, password) {
-        // 1. Prevent direct instantiation
+    constructor(username, password, {isAdmin = false} = {}) {
+        // Prevent direct instantiation
         if (new.target === User) {
         throw new TypeError("Cannot instantiate abstract class 'User' directly.");
         }
 
         this.username = username;
         this.password = password;
-        this.role = "customer";
-    }
-
-    constructor(username, password, role) {
-        // 1. Prevent direct instantiation
-        if (new.target === User) {
-        throw new TypeError("Cannot instantiate abstract class 'User' directly.");
-        }
-
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
-
-    getProfile() {
-        console.log(`${this.name} (${this.email})`);
-    }
-
-    //Abstract method simulation
-    getPermissions() {
-        throw new Error("Method 'getPermissions()' must be implemented by subclasses.");
+        this.isAdmin = isAdmin;
     }
 }
 
 class Admin extends User {
-    constructor (username, password, role) {
-        super(username, password, role);
+    constructor (username, password) {
+        super(username, password, { isAdmin: true });
     }
-
-    // Implementing the abstract method - Admin CRUD
-    getPermissions() {
-        console.log('read', 'write', 'delete', 'manage_users');
-    }
-
 }
 
-class Customer extends user {
+class Customer extends User {
     constructor (username, password) {
         super(username, password);
     }
-
-    getPermissions() {
-        console.log('read');
-    }
 }
 
+//Abstract Class Account
+//CheckingsAccount extends Account
+//SavingsAccount extends Account
+
+//Interface AccountOperations: printInterestRate(), deposit, withdraw, transfer
+//SavingsAccount always gives higher interest rate
 app().catch((err) => {
     console.error(err);
 });
