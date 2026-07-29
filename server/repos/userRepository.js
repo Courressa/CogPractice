@@ -9,6 +9,12 @@ export const findByID = (id) => {
 };
 
 export const save = async ({ username, password, isAdmin = false }) => {
+    const existing = await User.findOne({ username });
+    
+    if (existing) {
+        return "Username exists";
+    }
+
     await User.create({ username, password, isAdmin });
     return User.findOne({ username }).select("-password");
 };
