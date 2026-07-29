@@ -11,11 +11,10 @@ export const createCustomer = async (username, password) => {
         throw error;
     }
 
-    const payload = await save(username, password);
+    const payload = await save({ username, password, isAdmin: false });
     return {
         message: "User created successfully.",
-        id: payload.id,
-        username: payload.username
+        user: payload
     }
 }
 
@@ -82,6 +81,6 @@ export const deleteUser = async (id) => {
     }
 
     return {
-        message: payload
+        message: `${payload.username} removed successfully.`
     };
 }

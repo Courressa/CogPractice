@@ -9,13 +9,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
-// Connects to MongoDB
-connectDB();
-
 app.use("/api/v1", healthRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/customers", customerRouter);
 
-app.listen(PORT, () => {
+async function start() {
+    await connectDB();
+    app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
+    });
+}
+
+start().catch((err) => {
+    console.error(err);
+    process.exit(1);
 });

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { getAllCust, getByID, createCustomer, updatePassword, deleteUser } from "../services/customerService.js";
 
 export const registerCustomer = async (req, res) => {
@@ -45,9 +46,9 @@ export const getAllCustomersCont = async (req, res) => {
 
 export const getUserByID = async (req, res) => {
     try {
-        const id = Number(req.params.id);
+        const id = req.params.id;
 
-        if (Number.isNaN(id)) {
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "A valid user ID is required" });
         }
 
@@ -97,9 +98,9 @@ export const updateUserPassword = async (req, res) => {
 
 export const delUser = async (req, res) => {
     try {
-        const id = Number(req.params.id);
+        const id = req.params.id;
 
-        if (Number.isNaN(id)) {
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "A valid user ID is required" });
         }
 
