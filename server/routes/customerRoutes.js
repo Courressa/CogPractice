@@ -1,10 +1,7 @@
 import express from "express";
-import { getAllCustomersCont, getUserByID, registerCustomer, updateCustomer, updateUserPassword, delUser } from "../controllers/customerController.js";
+import { getAllCustomersCont, getUserByID, updateCustomer, updateUserPassword, delUser } from "../controllers/customerController.js";
 
 const router = express.Router();
-
-//POST - /api/v1/customers/register - register customer - PUBLIC
-router.post("/register", registerCustomer);
 
 //GET - /api/v1/customers - get all customers - PUBLIC (for now)
 router.get("/", getAllCustomersCont);

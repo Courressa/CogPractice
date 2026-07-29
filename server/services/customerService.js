@@ -1,22 +1,4 @@
-import { getAllCustomers, findByID, save, updateUser, forgotPassword, removeUser } from "../repos/userRepository.js";
-
-// Create
-export const createCustomer = async (data) => {
-    const payload = await save({ ...data, isAdmin: false });
-
-    if (payload === "Username exists") {
-        const error = new Error("This username already exists.");
-        error.statusCode = 409;
-        throw error;
-    }
-
-    
-    return {
-        message: "User created successfully.",
-        user: payload
-    }
-}
-
+import { getAllCustomers, findByID, updateUser, forgotPassword, removeUser } from "../repos/userRepository.js";
 
 //Read
 export const getAllCust = async () => {
