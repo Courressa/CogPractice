@@ -1,50 +1,24 @@
-export class User {
-    #id
-    #username;
-    #password;
-    #isAdmin;
-    
-    constructor(id, username, password, isAdmin = false) {
-        // Prevent direct instantiation
-        if (new.target === User) {
-            throw new TypeError("Cannot instantiate abstract class 'User' directly.");
-        };
+import mongoose from "mongoose";
 
-        this.#id = id;
-        this.#username = username;
-        this.#password = password;
-        this.#isAdmin = isAdmin;
-    };
+const userSchema = new mongoose.Schema({
+    username: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+}, {
+  timestamps: true,
+});
 
-    getId() {
-        return this.#id;
-    };
+const UserModel = mongoose.model("User", userSchema);
 
-    setId(id){
-        this.#id = id;
-    };
-
-    getUsername() {
-        return this.#username;
-    };
-
-    setUsername(username) {
-        this.#username = username;
-    };
-
-    getPassword() {
-        return this.#password;
-    };
-
-    setPassword(password) {
-        this.#password = password;
-    };
-
-    getIsAdmin() {
-        return this.#isAdmin;
-    };
-
-    setIsAdmin(isAdmin) {
-        this.#isAdmin = isAdmin;
-    };
-};
+export default UserModel;

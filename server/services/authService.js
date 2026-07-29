@@ -7,7 +7,7 @@ const authenticateUser = async (username, password) => {
         throw new Error("User not found.");
     }
 
-    const passwordMatch = (await user.getPassword()) !== password ? true : false;
+    const passwordMatch = user.password === password;
 
     if (!passwordMatch) {
         throw new Error("Invalid login credentials.");

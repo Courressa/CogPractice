@@ -1,21 +1,21 @@
-import Customer from "../models/Customer.js";
+import User from "../models/User.js";
 import { getAllCustomers, findByID, save, forgotPassword, removeUser } from "../repos/userRepository.js";
 
 // Create
-export const createCustomer = async ({ username, password }) => {
-    const newUser = new Customer(undefined, username, password);
-    const payload = await save(newUser);
+export const createCustomer = async (username, password) => {
+    const existing = await User.findOne({ username });
 
-    if (payload === "Already exists") {
+    if (existing) {
         const error = new Error("This username already exists.");
         error.statusCode = 409;
         throw error;
     }
 
+    const payload = await save(username, password);
     return {
         message: "User created successfully.",
-        id: payload.getId(),
-        username: payload.getUsername()
+        id: payload.id,
+        username: payload.username
     }
 }
 
@@ -24,7 +24,7 @@ export const createCustomer = async ({ username, password }) => {
 export const getAllCust = async () => {
     const payload = await getAllCustomers();
 
-    if (!payload) {
+    if (!payload || payload.length === 0) {
         const error = new Error("No customers found.");
         error.statusCode = 404;
         throw error;

@@ -18,7 +18,7 @@ export const registerCustomer = async (req, res) => {
             });
         }
 
-        const result = await createCustomer({ username, password });
+        const result = await createCustomer(username, password);
 
         res.status(200).json(result);
     } catch (error) {
