@@ -1,44 +1,74 @@
 import User from "../models/User.js";
 
-export const findByUsername = (username) => {
-    return User.findOne({ username });
+// Helper – never return the password
+const sanitize = (user) => {
+  if (!user) return null;
+  const obj = user.toObject ? user.toObject() : user;
+  const { password, __v, ...safe } = obj;
+  return {
+    id: safe._id,          // frontend-friendly "id"
+    ...safe,
+  };
 };
 
-export const findByID = (id) => {
-    return User.findById(id).select("-password");
+export const getAllCustomers = async () => {
+  const customers = await User.find({ isAdmin: false }).select("-password");
+  return customers.map(sanitize);
 };
 
-export const save = async ({ username, password, isAdmin = false }) => {
-    const existing = await User.findOne({ username });
-    
-    if (existing) {
-        return "Username exists";
-    }
-
-    await User.create({ username, password, isAdmin });
-    return User.findOne({ username }).select("-password");
+export const findByID = async (id) => {
+  const user = await User.findById(id).select("-password");
+  return sanitize(user);
 };
 
-export const getAllCustomers = () => {
-    return User.find({ isAdmin: false }).select("-password");
+export const findByUsername = async (username) => {
+  return await User.findOne({ username });
 };
 
-export const forgotPassword = async (username, newPassword) => {
-    const getUser = await findByUsername(username);
+export const save = async ({ username, password, firstName = "", lastName = "", email = "", isAdmin = false }) => {
+  const existing = await User.findOne({ username });
+  if (existing) return "Username exists";
 
-    if (!getUser) return null;
+  const user = await User.create({
+    username,
+    password,
+    firstName,
+    lastName,
+    email,
+    isAdmin,
+  });
 
-    if (getUser.password === newPassword) {
-        return "Password already in use";
-    }
-
-    return User.findOneAndUpdate(
-        { username },                    // find this user
-        { password: newPassword },       // change this field
-        { returnDocument: "after" }      // return the updated document
-    ).select("-password");
+  return sanitize(user);
 };
 
-export const removeUser = (id) => {
-    return User.findByIdAndDelete(id).select("username");
+export const updateUser = async (id, updates) => {
+  // Only allow these fields to be updated
+  const allowed = ["firstName", "lastName", "email", "username"];
+  const filtered = {};
+  for (const key of allowed) {
+    if (updates[key] !== undefined) filtered[key] = updates[key];
+  }
+
+  const user = await User.findByIdAndUpdate(id, filtered, {
+    new: true,
+    runValidators: true,
+  }).select("-password");
+
+  return sanitize(user);
+};
+
+export const forgotPassword = async (username, password) => {
+  const user = await User.findOne({ username });
+  if (!user) return null;
+
+  if (user.password === password) return "Password already in use";
+
+  user.password = password;
+  await user.save();
+  return sanitize(user);
+};
+
+export const removeUser = async (id) => {
+  const user = await User.findByIdAndDelete(id);
+  return user ? sanitize(user) : null;
 };

@@ -1,8 +1,8 @@
-import { getAllCustomers, findByID, save, forgotPassword, removeUser } from "../repos/userRepository.js";
+import { getAllCustomers, findByID, save, updateUser, forgotPassword, removeUser } from "../repos/userRepository.js";
 
 // Create
-export const createCustomer = async (username, password) => {
-    const payload = await save({ username, password, isAdmin: false });
+export const createCustomer = async (data) => {
+    const payload = await save({ ...data, isAdmin: false });
 
     if (payload === "Username exists") {
         const error = new Error("This username already exists.");
@@ -48,6 +48,19 @@ export const getByID = async (id) => {
 }
 
 //Update
+export const updateCustomerProfile = async (id, updates) => {
+  const payload = await updateUser(id, updates);
+  if (!payload) {
+    const error = new Error("User not found.");
+    error.statusCode = 404;
+    throw error;
+  }
+  return {
+    message: "Profile updated successfully.",
+    user: payload,
+  };
+};
+
 export const updatePassword = async (username, password) => {
     const payload = await forgotPassword(username, password);
 

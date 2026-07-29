@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
-import { getAllCust, getByID, createCustomer, updatePassword, deleteUser } from "../services/customerService.js";
+import { getAllCust, getByID, createCustomer, updateCustomerProfile, updatePassword, deleteUser } from "../services/customerService.js";
 
 export const registerCustomer = async (req, res) => {
     try {
-        const { username, password } = req.body || {};
+        const { username, password, firstName, lastName, email } = req.body || {};
 
-        // Checks if content is in username and password field
-        if (!username || !password) {
-            return res.status(400).json({ message: "Username and password are required" });
+        // Checks if content is in each field
+        if (!username || !password || !firstName || !lastName || !email) {
+            return res.status(400).json({ message: "All fields are required. Please ensure each field is filled in to continue." });
         }
 
         // Checks strength of password based on requirement 
@@ -19,7 +19,7 @@ export const registerCustomer = async (req, res) => {
             });
         }
 
-        const result = await createCustomer(username, password);
+        const result = await createCustomer({ username, password, firstName, lastName, email });
 
         res.status(200).json(result);
     } catch (error) {
@@ -63,6 +63,23 @@ export const getUserByID = async (req, res) => {
         return res.status(500).json({ message: error.message || "Server error. Something went wrong" });
     }
 }
+
+export const updateCustomer = async (req, res) => {
+    try {
+        const { id } = req.params;
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: "A valid user ID is required" });
+    }
+
+    const result = await updateCustomerProfile(id, req.body);
+    res.status(200).json(result);
+    } catch (error) {
+        if (error.statusCode) {
+            return res.status(error.statusCode).json({ message: error.message });
+        }
+        return res.status(500).json({ message: error.message || "Server error" });
+    }
+};
 
 export const updateUserPassword = async (req, res) => {
     try {

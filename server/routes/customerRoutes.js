@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllCustomersCont, getUserByID, registerCustomer, updateUserPassword, delUser } from "../controllers/customerController.js";
+import { getAllCustomersCont, getUserByID, registerCustomer, updateCustomer, updateUserPassword, delUser } from "../controllers/customerController.js";
 
 const router = express.Router();
 
@@ -9,8 +9,11 @@ router.post("/register", registerCustomer);
 //GET - /api/v1/customers - get all customers - PUBLIC (for now)
 router.get("/", getAllCustomersCont);
 
-//GET - /api/v1/customers/:id - get by ID - PUBLIC
+//GET - /api/v1/customers/:id - get customer by ID - PUBLIC
 router.get("/:id", getUserByID);
+
+//PUT - /api/vi/customers/:id - update customer profile - PUBLIC
+router.put("/:id", updateCustomer);
 
 //PATCH - /api/v1/customers/:username/password - update customer passsword based on username - PUBLIC
 router.patch("/:username/password", updateUserPassword);
