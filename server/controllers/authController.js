@@ -65,7 +65,6 @@ export const customerLogin = async (req, res) => {
 
         res.status(200).json(result);
     } catch (err) {
-        console.log("Issue in authenticate user");
         res.status(401).json({ message: err.message ? err.message : "Login failed."  });
     };
 };
