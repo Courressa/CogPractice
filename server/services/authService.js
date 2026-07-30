@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { findByUsername, save, sanitize } from "../repos/userRepository.js";
+import { findByUsername, findByEmail, save, sanitize } from "../repos/userRepository.js";
 
 const secretKey = process.env.JWT_SECRET;
 const SALT_ROUNDS = 10;
@@ -33,12 +33,6 @@ export const registerCustomer = async (data) => {
         password: hashedPassword,
         isAdmin: false
     });
-    
-    if (payload === "Email exists") {
-        const error = new Error("This email is already associated with an account.");
-        error.statusCode = 409;
-        throw error;
-    }
 
     return {
         message: "User created successfully.",
@@ -104,7 +98,7 @@ export const loginCustomer = async (username, password) => {
 export const loginAdmin = async (username, password) => {
     const payload = await authenticateUser(username, password);
     
-    if (!payload.isAdmin) {
+    if (!payload.user.isAdmin) {
         const error = new Error("This account does not have admin access.");
         error.statusCode = 403;
         throw error;

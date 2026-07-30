@@ -4,9 +4,9 @@ import User from "../models/User.js";
 export const sanitize = (user) => {
   if (!user) return null;
   const obj = user.toObject ? user.toObject() : user;
-  const { password, __v, ...safe } = obj;
+  const { password, __v, _id, ...safe } = obj;
   return {
-    id: safe._id,          // frontend-friendly "id"
+    id: _id,          // frontend-friendly "id"
     ...safe,
   };
 };

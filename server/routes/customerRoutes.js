@@ -13,7 +13,7 @@ router.get("/", authMiddleware, adminMiddleware, getAllCustomersCont);
 //GET - /api/v1/customers/:id - get customer by ID - PRIVATE - Owner or Admin access only
 router.get("/:id", authMiddleware, ownerOrAdminMiddleware, getUserByID);
 
-//PUT - /api/vi/customers/:id - update customer profile - PRIVATE - Owner access only
+//PUT - /api/v1/customers/:id - update customer profile - PRIVATE - Owner access only
 router.put("/:id", authMiddleware, ownerOnlyMiddleware, updateCustomer);
 
 //PATCH - /api/v1/customers/:username/password - update customer passsword based on username - PUBLIC/PRIVATE?????
