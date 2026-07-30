@@ -1,7 +1,7 @@
 import express from "express";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import { adminMiddleware } from "../middleware/adminMiddleware.js";
-import { ownerOnlyMiddleware } from "../middleware/OwnerOnlyMiddleware.js";
+import { ownerOnlyMiddleware } from "../middleware/ownerOnlyMiddleware.js";
 import { ownerOrAdminMiddleware } from "../middleware/ownerOrAdminMiddleware.js";
 import { getAllCustomersCont, getUserByID, updateCustomer, delUser } from "../controllers/customerController.js";
 
