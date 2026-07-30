@@ -21,7 +21,7 @@ app.use("/api/v1/customers", customerRouter);
 async function start() {
     await connectDB();
     app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+        console.log(`Server running on http://localhost:${PORT}`);
     });
 }
 
