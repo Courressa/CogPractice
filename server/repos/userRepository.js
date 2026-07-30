@@ -6,7 +6,7 @@ export const sanitize = (user) => {
   const obj = user.toObject ? user.toObject() : user;
   const { password, __v, _id, ...safe } = obj;
   return {
-    id: _id,          // frontend-friendly "id"
+    id: _id?.toString?.() ?? _id,          // frontend-friendly "id"
     ...safe,
   };
 };
@@ -21,9 +21,17 @@ export const findByID = async (id) => {
   return sanitize(user);
 };
 
+// returns account including password
+export const findByIdWithPassword = async (id) => {
+  return User.findById(id).lean();
+};
+
+// returns account including password
 export const findByUsername = async (username) => {
   return await User.findOne({ username });
 };
+
+// returns account including password
 export const findByEmail = async (email) => {
   return await User.findOne({ email });
 };
@@ -63,15 +71,19 @@ export const updateUser = async (id, updates) => {
   return sanitize(user);
 };
 
-export const forgotPassword = async (username, password) => {
-  const user = await User.findOne({ username });
-  if (!user) return null;
+export const changePassword = async (id, hashedPassword) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    id,
+    { password: hashedPassword },
+    {
+      returnDocument: "after",
+      runValidators: true
+    }
+  ).select("-password");
 
-  if (user.password === password) return "Password already in use";
+  if (!updatedUser) return null;
 
-  user.password = password;
-  await user.save();
-  return sanitize(user);
+  return sanitize(updatedUser);
 };
 
 export const removeUser = async (id) => {

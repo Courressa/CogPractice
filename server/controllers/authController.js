@@ -1,7 +1,8 @@
-import { registerCustomer as registerCustomerService, loginCustomer, loginAdmin } from "../services/authService.js";
+import { registerCustomer as registerCustomerService, loginCustomer, updatePassword, loginAdmin } from "../services/authService.js";
 
 const secretKey = process.env.JWT_SECRET;
 const SALT_ROUNDS = 10;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
 export const registerCustomer = async (req, res) => {
     try {
@@ -27,7 +28,6 @@ export const registerCustomer = async (req, res) => {
         }
 
         // Checks strength of password based on requirement 
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
         if (!passwordRegex.test(password)) {
             return res.status(400).json({
                 message: "Password must be at least 8 characters long and include uppercase, lowercase, and a number"
@@ -50,7 +50,7 @@ export const registerCustomer = async (req, res) => {
             return res.status(error.statusCode).json({ message: error.message})
         }
         return res.status(500).json({ message: error.message || "Server error. Something went wrong" });
-    }
+    };
 };
 
 export const customerLogin = async (req, res) => {
@@ -67,8 +67,8 @@ export const customerLogin = async (req, res) => {
     } catch (err) {
         console.log("Issue in authenticate user");
         res.status(401).json({ message: err.message ? err.message : "Login failed."  });
-    }
-}
+    };
+};
 
 export const adminLogin = async (req, res) => {
     try {
@@ -83,5 +83,47 @@ export const adminLogin = async (req, res) => {
         res.status(200).json(result);
     } catch (err) {
         res.status(401).json({ message: err.message ? err.message : "Login failed."  });
-    }
-}
+    };
+};
+
+export const updateUserPassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body || {};
+
+        if (!currentPassword?.trim() || !newPassword?.trim()) {
+            return res.status(400).json({
+                message: "Current password and new password are required."
+            });
+        }
+
+        if (!passwordRegex.test(newPassword)) {
+            return res.status(400).json({
+                message:
+                "New password must be at least 8 characters long and include uppercase, lowercase, and a number"
+            });
+        }
+
+        if (currentPassword === newPassword) {
+            return res.status(400).json({
+                message: "New password must be different from the current password."
+            });
+        }
+
+        // req.user comes from authMiddleware (JWT)
+        const result = await updatePassword(
+            req.user.id,
+            currentPassword,
+            newPassword
+        );
+
+        return res.status(200).json(result);
+    } catch (error) {
+        if (error.statusCode) {
+            return res.status(error.statusCode).json({ message: error.message });
+        }
+
+        return res.status(500).json({
+            message: error.message || "Server error. Something went wrong"
+        });
+    };
+};

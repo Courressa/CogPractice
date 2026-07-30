@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { findByUsername, findByEmail, save, sanitize } from "../repos/userRepository.js";
+import { findByIdWithPassword, findByUsername, findByEmail, save, changePassword, sanitize } from "../repos/userRepository.js";
 
 const secretKey = process.env.JWT_SECRET;
 const SALT_ROUNDS = 10;
@@ -109,3 +109,27 @@ export const loginAdmin = async (username, password) => {
         ...payload,
     };
 };
+
+
+export const updatePassword = async (userId, currentPassword, newPassword) => {
+    const user = await findByIdWithPassword(userId); 
+
+    if (!user) {
+        const error = new Error("User not found.");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    const match = await bcrypt.compare(currentPassword, user.password);
+
+    if (!match) {
+        const error = new Error("Current password is incorrect.");
+        error.statusCode = 401;
+        throw error;
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+    await changePassword(userId, hashedPassword);
+
+    return { message: "Password updated successfully." };
+}

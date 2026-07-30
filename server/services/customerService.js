@@ -1,4 +1,4 @@
-import { getAllCustomers, findByID, updateUser, forgotPassword, removeUser } from "../repos/userRepository.js";
+import { getAllCustomers, findByID, updateUser, removeUser } from "../repos/userRepository.js";
 
 //Read
 export const getAllCust = async () => {
@@ -42,27 +42,6 @@ export const updateCustomerProfile = async (id, updates) => {
     user: payload,
   };
 };
-
-export const updatePassword = async (username, password) => {
-    const payload = await forgotPassword(username, password);
-
-    if (!payload) {
-        const error = new Error("User not found.");
-        error.statusCode = 404;
-        throw error;
-    }
-
-    if (payload === "Password already in use") {
-        const error = new Error("Please choose a different password.");
-        error.statusCode = 422;
-        throw error;
-    }
-
-    return {
-        message: "Password updated successfully.",
-        user: payload
-    }
-}
 
 //Delete
 export const deleteUser = async (id) => {
