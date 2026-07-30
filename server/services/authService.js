@@ -7,14 +7,33 @@ const SALT_ROUNDS = 10;
 
 // Register
 export const registerCustomer = async (data) => {
-    const payload = await save({ ...data, isAdmin: false });
+    const { username, email, password, ...otherData } = data;
 
-    if (payload === "Username exists") {
+    const existingUsername = await findByUsername(username);
+    if (existingUsername) {
         const error = new Error("This username already exists.");
         error.statusCode = 409;
         throw error;
     }
 
+    const existingEmail = await findByEmail(email);
+    if (existingEmail) {
+        const error = new Error("This email is already associated with an account.");
+        error.statusCode = 409;
+        throw error;
+    }
+
+    // Hash password before saving
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
+    const payload = await save({
+        username,
+        email,
+        ...otherData,
+        password: hashedPassword,
+        isAdmin: false
+    });
+    
     if (payload === "Email exists") {
         const error = new Error("This email is already associated with an account.");
         error.statusCode = 409;

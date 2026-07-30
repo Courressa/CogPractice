@@ -5,25 +5,46 @@ const SALT_ROUNDS = 10;
 
 export const registerCustomer = async (req, res) => {
     try {
-        const { username, password, firstName, lastName, email } = req.body || {};
+        let { username, password, firstName, lastName, email } = req.body || {};
+        username = username?.trim();
+        password = password?.trim();
+        firstName = firstName?.trim();
+        lastName = lastName?.trim();
+        email = email?.trim();
 
-        // Checks if content is in each field
         if (!username || !password || !firstName || !lastName || !email) {
-            return res.status(400).json({ message: "All fields are required. Please ensure each field is filled in to continue." });
+            return res.status(400).json({
+                message: "All fields are required. Please ensure each field is filled in to continue."
+            });
+        }
+
+        // Checks username requirements are met
+        const usernameRegex = /^[a-zA-Z0-9_]{4,20}$/;
+        if (!usernameRegex.test(username.trim())) {
+            return res.status(400).json({
+                message: "Username must be 4-20 characters and contain only letters, numbers, or underscores."
+            });
         }
 
         // Checks strength of password based on requirement 
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-
         if (!passwordRegex.test(password)) {
             return res.status(400).json({
                 message: "Password must be at least 8 characters long and include uppercase, lowercase, and a number"
             });
         }
 
+        // Checks if email is valid/follows correct convention
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({
+                message: "Please provide a valid email address."
+            });
+        }
+
         const result = await registerCustomerService({ username, password, firstName, lastName, email });
 
-        res.status(200).json(result);
+        res.status(201).json(result);
     } catch (error) {
         if (error.statusCode) {
             return res.status(error.statusCode).json({ message: error.message})
@@ -44,6 +65,7 @@ export const customerLogin = async (req, res) => {
 
         res.status(200).json(result);
     } catch (err) {
+        console.log("Issue in authenticate user");
         res.status(401).json({ message: err.message ? err.message : "Login failed."  });
     }
 }

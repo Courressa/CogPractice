@@ -24,6 +24,9 @@ export const findByID = async (id) => {
 export const findByUsername = async (username) => {
   return await User.findOne({ username });
 };
+export const findByEmail = async (email) => {
+  return await User.findOne({ email });
+};
 
 export const save = async ({ username, password, firstName = "", lastName = "", email = "", isAdmin = false }) => {
   const existingUsername = await User.findOne({ username });
