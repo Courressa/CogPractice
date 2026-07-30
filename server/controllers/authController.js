@@ -1,5 +1,8 @@
 import { registerCustomer as registerCustomerService, loginCustomer, loginAdmin } from "../services/authService.js";
 
+const secretKey = process.env.JWT_SECRET;
+const SALT_ROUNDS = 10;
+
 export const registerCustomer = async (req, res) => {
     try {
         const { username, password, firstName, lastName, email } = req.body || {};

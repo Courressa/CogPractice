@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 
 // Helper – never return the password
-const sanitize = (user) => {
+export const sanitize = (user) => {
   if (!user) return null;
   const obj = user.toObject ? user.toObject() : user;
   const { password, __v, ...safe } = obj;
@@ -26,8 +26,11 @@ export const findByUsername = async (username) => {
 };
 
 export const save = async ({ username, password, firstName = "", lastName = "", email = "", isAdmin = false }) => {
-  const existing = await User.findOne({ username });
-  if (existing) return "Username exists";
+  const existingUsername = await User.findOne({ username });
+  if (existingUsername) return "Username exists";
+
+  const existingEmail = await User.findOne({ email });
+  if (existingEmail) return "Email exists";
 
   const user = await User.create({
     username,
