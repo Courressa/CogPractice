@@ -1,26 +1,174 @@
+/* AdminDashboard.css */
+
 .admin-header {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-header p {
+  margin-top: 0.4rem;
+}
+
+.admin-header strong {
+  color: var(--navy);
+}
+
+.admin-actions {
+  align-items: center;
+}
+
+.admin-account-hint {
+  margin: -0.35rem 0 1rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  max-width: 40rem;
+}
+
+.admin-account-section .banner {
+  margin-bottom: 1rem;
+}
+
+.admin-account-section .profile-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.admin-account-section .profile-row {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: 0.75rem 1rem;
+  align-items: baseline;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-account-section .profile-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.admin-account-section .profile-list dt {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.admin-account-section .profile-list dd {
+  margin: 0;
+  color: var(--text-h);
+  font-size: 1.02rem;
+  word-break: break-word;
+}
+
+.admin-account-section .id-cell {
+  font-size: 0.85rem;
+  font-family: ui-monospace, Consolas, monospace;
+  color: var(--text-muted);
+  word-break: break-all;
+}
+
+@media (max-width: 480px) {
+  .admin-account-section .profile-row {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+}
+
+.admin-stats-row {
+  margin-bottom: 1.75rem;
 }
 
 .admin-stats {
   display: flex;
-  gap: 2rem;
-  margin-bottom: 1.75rem;
-  max-width: 280px;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 240px;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(160deg, var(--surface) 0%, #edf2f7 100%);
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
-.admin-stats strong {
-  display: block;
-  font-size: 1.75rem;
-  color: var(--navy);
-  line-height: 1.2;
-}
-
-.admin-stats span {
-  font-size: 0.875rem;
+.admin-stats-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   color: var(--text-muted);
+}
+
+.admin-stats-value {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.admin-stats-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.admin-table-section {
+  margin-bottom: 1rem;
+}
+
+.admin-table-section .section-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.admin-table-section .section-title {
+  margin-bottom: 0;
+}
+
+.admin-refresh-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.table-wrap.is-refreshing {
+  opacity: 0.72;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.username-cell {
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+@media (max-width: 640px) {
+  .admin-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-actions {
+    width: 100%;
+  }
+
+  .admin-actions .btn {
+    flex: 1;
+  }
+
+  .admin-stats {
+    max-width: none;
+  }
 }

@@ -31,9 +31,26 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  /** Merge updated profile fields into session user (e.g. after self-edit). */
+  const updateUser = (userValue) => {
+    setUser((prev) => {
+      const next = { ...(prev || {}), ...userValue };
+      sessionStorage.setItem('user', JSON.stringify(next));
+      return next;
+    });
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, token, login, logout, loading, isAuthenticated: !!token }}
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        updateUser,
+        loading,
+        isAuthenticated: !!token,
+      }}
     >
       {children}
     </AuthContext.Provider>

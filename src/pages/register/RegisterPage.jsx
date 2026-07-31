@@ -47,6 +47,10 @@ function RegisterPage() {
   return (
     <div className="page auth-page">
       <div className="auth-card card">
+        <div className="auth-brand" aria-hidden="true">
+          <span className="auth-brand-mark">B</span>
+        </div>
+
         <div className="page-header">
           <h1>Create your account</h1>
           <p>Register as a customer to access online banking.</p>
@@ -142,14 +146,13 @@ function RegisterPage() {
 
           <button type="submit" className="btn btn-primary auth-submit" disabled={loading}>
             {loading ? (
-                    <>
-                        <span className="spinner" style={{ width: '1rem', height: '1rem', borderWidth: 2 }} aria-hidden="true" />
-                        Signing in…
-                    </>
-                ) : (
-                    'Register'
-                )
-            }
+              <>
+                <span className="spinner spinner-sm" aria-hidden="true" />
+                Creating account…
+              </>
+            ) : (
+              'Register'
+            )}
           </button>
         </form>
 

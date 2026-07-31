@@ -1,0 +1,46 @@
+/* Shared profile / password form layout */
+
+.profile-forms-stack {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 560px;
+}
+
+.profile-form-card {
+  padding: 1.75rem;
+  box-shadow: var(--shadow);
+}
+
+.profile-form-card .card-title {
+  margin-bottom: 0.35rem;
+}
+
+.profile-form-card .card-desc {
+  margin: 0 0 1.25rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.profile-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.profile-view-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.admin-account-section {
+  margin-bottom: 2rem;
+}
+
+.admin-account-section .section-title {
+  margin-bottom: 0.85rem;
+}

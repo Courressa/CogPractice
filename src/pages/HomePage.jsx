@@ -48,11 +48,11 @@ function HomePage() {
               modern platform built for clarity, security, and speed.
             </p>
             <div className="btn-group hero-actions">
-              <Link to="/services" className="btn btn-primary">
-                View Services
+              <Link to="/register" className="btn btn-primary">
+                Open an account
               </Link>
-              <Link to="/contact" className="btn btn-secondary">
-                Contact Us
+              <Link to="/login" className="btn btn-secondary">
+                Sign in
               </Link>
             </div>
           </div>
@@ -130,13 +130,13 @@ function HomePage() {
           <div>
             <h2>Ready to get started?</h2>
             <p>
-              Register a customer, explore our services, or speak with a banking
-              specialist — we’re here to help.
+              Create your customer account or sign in to manage your banking profile.
+              Prefer to talk first? Reach out to our team anytime.
             </p>
           </div>
           <div className="btn-group">
-            <Link to="/services" className="btn btn-primary">
-              Manage Customers
+            <Link to="/register" className="btn btn-primary">
+              Create account
             </Link>
             <Link to="/about" className="btn btn-secondary">
               Learn About Us

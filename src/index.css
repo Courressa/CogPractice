@@ -241,70 +241,6 @@ img {
   gap: 0.5rem;
 }
 
-.auth-page {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 2.5rem;
-  padding-bottom: 3rem;
-}
-
-.auth-card {
-  width: 100%;
-  max-width: 440px;
-}
-
-.auth-card .page-header {
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.auth-submit {
-  width: 100%;
-  margin-top: 0.5rem;
-}
-
-.auth-switch {
-  margin-top: 1.25rem;
-  text-align: center;
-  font-size: 0.95rem;
-  color: var(--text-muted);
-}
-
-.role-toggle {
-  display: flex;
-  gap: 0.35rem;
-  padding: 0.25rem;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  margin-bottom: 1.25rem;
-}
-
-.role-btn {
-  flex: 1;
-  padding: 0.55rem 0.75rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  font-family: inherit;
-  border: none;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.role-btn:hover {
-  color: var(--navy);
-}
-
-.role-btn.active {
-  background: var(--surface);
-  color: var(--navy);
-  box-shadow: var(--shadow-sm);
-}
-
 /* ── Forms ── */
 
 .form-grid {
@@ -528,6 +464,13 @@ table.data-table .id-cell {
   border-width: 3.5px;
 }
 
+.spinner-sm {
+  width: 0.95rem;
+  height: 0.95rem;
+  border-width: 2px;
+  flex-shrink: 0;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -544,7 +487,7 @@ table.data-table .id-cell {
   color: var(--text-muted);
 }
 
-/* ── Auth pages (shared) ── */
+/* ── Auth pages (shared: login + register) ── */
 .auth-page {
   display: flex;
   justify-content: center;
@@ -556,29 +499,70 @@ table.data-table .id-cell {
 .auth-card {
   width: 100%;
   max-width: 440px;
+  padding: 2rem 1.75rem 1.75rem;
+  box-shadow: var(--shadow);
+  border-radius: var(--radius-lg);
+  border-top: 3px solid var(--accent);
+}
+
+.auth-brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.auth-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 10px;
+  background: linear-gradient(145deg, var(--accent-light), var(--accent));
+  color: var(--navy);
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+  box-shadow: 0 2px 8px rgba(43, 108, 176, 0.3);
 }
 
 .auth-card .page-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.35rem;
   text-align: center;
+}
+
+.auth-card .page-header h1 {
+  font-size: clamp(1.5rem, 2.5vw, 1.85rem);
+}
+
+.auth-card .page-header p {
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
 }
 
 .auth-submit {
   width: 100%;
-  margin-top: 0.5rem;
+  margin-top: 0.35rem;
+  min-height: 2.75rem;
 }
 
 .auth-switch {
-  margin-top: 1.25rem;
+  margin-top: 1.35rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--border);
   text-align: center;
   font-size: 0.95rem;
   color: var(--text-muted);
 }
 
+.auth-switch a {
+  font-weight: 600;
+}
+
 .role-toggle {
   display: flex;
-  gap: 0.35rem;
-  padding: 0.25rem;
+  gap: 0.3rem;
+  padding: 0.3rem;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -587,16 +571,17 @@ table.data-table .id-cell {
 
 .role-btn {
   flex: 1;
-  padding: 0.55rem 0.75rem;
+  padding: 0.6rem 0.75rem;
   font-size: 0.9rem;
   font-weight: 600;
   font-family: inherit;
-  border: none;
+  border: 1px solid transparent;
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--text-muted);
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .role-btn:hover {
@@ -606,5 +591,12 @@ table.data-table .id-cell {
 .role-btn.active {
   background: var(--surface);
   color: var(--navy);
-  box-shadow: var(--shadow-sm);
+  border-color: rgba(43, 108, 176, 0.2);
+  box-shadow: var(--shadow-sm), 0 0 0 1px rgba(43, 108, 176, 0.08);
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.5rem 1.15rem 1.35rem;
+  }
 }
