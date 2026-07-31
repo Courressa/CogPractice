@@ -1,7 +1,10 @@
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import './Header.css';
 
 function Header() {
+  const { isAuthenticated, user, logout } = useAuth();
+
   return (
     <header className="header">
       <div className="header-inner">
@@ -29,9 +32,25 @@ function Header() {
           </NavLink>
         </nav>
 
-        <Link to="/services" className="btn btn-accent header-cta">
-          Online Banking
-        </Link>
+        {isAuthenticated ? (
+          <>
+            <Link
+              to={user?.isAdmin ? '/admin/dashboard' : '/dashboard'}
+              className="btn btn-accent header-cta"
+            >
+              Dashboard
+            </Link>
+          </>
+        ) : (
+          <div className="btn-group header-cta">
+            <Link to="/login" className="btn btn-secondary btn-sm">
+              Log in
+            </Link>
+            <Link to="/register" className="btn btn-accent btn-sm">
+              Register
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   );

@@ -1,0 +1,36 @@
+/* CustomerDashboard.css */
+.profile-card {
+  max-width: 520px;
+}
+
+.profile-list {
+  display: grid;
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+}
+
+.profile-list div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.profile-list dt {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.profile-list dd {
+  margin: 0;
+  color: var(--text-h);
+  font-size: 1.05rem;
+}
+
+.profile-list .id-cell {
+  font-size: 0.85rem;
+  font-family: ui-monospace, Consolas, monospace;
+  color: var(--text-muted);
+  word-break: break-all;
+}
