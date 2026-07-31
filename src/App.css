@@ -1,23 +1,12 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html, body, #root {
-  height: 100%;
-}
-
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-height: 100svh;
+  background: var(--bg);
 }
 
 .main-content {
   flex: 1;
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
   width: 100%;
 }

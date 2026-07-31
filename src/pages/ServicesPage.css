@@ -1,0 +1,42 @@
+.services-page .section-lead {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: -0.5rem 0 1.25rem;
+}
+
+.services-page .section-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.services-page .section-row .section-title {
+  margin-bottom: 0.35rem;
+}
+
+.services-page .section-row .section-lead {
+  margin-bottom: 1rem;
+}
+
+.edit-panel {
+  border: 1px solid #90cdf4;
+  box-shadow: var(--shadow);
+  background: linear-gradient(180deg, #ebf8ff 0%, #fff 40%);
+}
+
+.services-page code {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.85em;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+@media (max-width: 640px) {
+  .services-page .section-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
