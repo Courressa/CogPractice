@@ -36,23 +36,41 @@ export const findByEmail = async (email) => {
   return await User.findOne({ email });
 };
 
+export const findByUsernameExcludingId = async (username, excludeId) => {
+  return await User.findOne({ username, _id: { $ne: excludeId } });
+};
+
+export const findByEmailExcludingId = async (email, excludeId) => {
+  return await User.findOne({ email, _id: { $ne: excludeId } });
+};
+
 export const save = async ({ username, password, firstName = "", lastName = "", email = "", isAdmin = false }) => {
-  const existingUsername = await User.findOne({ username });
-  if (existingUsername) return "Username exists";
+  try {
+    const user = await User.create({
+      username,
+      password,
+      firstName,
+      lastName,
+      email,
+      isAdmin,
+    });
 
-  const existingEmail = await User.findOne({ email });
-  if (existingEmail) return "Email exists";
-
-  const user = await User.create({
-    username,
-    password,
-    firstName,
-    lastName,
-    email,
-    isAdmin,
-  });
-
-  return sanitize(user);
+    return sanitize(user);
+  } catch (err) {
+    // Surface duplicate-key races as proper HTTP-aware errors for the service layer
+    if (err.code === 11000) {
+      const field = Object.keys(err.keyPattern || {})[0] || "field";
+      const error = new Error(
+        field === "email"
+          ? "This email is already associated with an account."
+          : "This username already exists."
+      );
+      error.statusCode = 409;
+      error.code = 11000;
+      throw error;
+    }
+    throw err;
+  }
 };
 
 export const updateUser = async (id, updates) => {
@@ -63,12 +81,32 @@ export const updateUser = async (id, updates) => {
     if (updates[key] !== undefined) filtered[key] = updates[key];
   }
 
-  const user = await User.findByIdAndUpdate(id, filtered, {
-    returnDocument: 'after',
-    runValidators: true,
-  }).select("-password");
+  if (Object.keys(filtered).length === 0) {
+    const user = await User.findById(id).select("-password");
+    return sanitize(user);
+  }
 
-  return sanitize(user);
+  try {
+    const user = await User.findByIdAndUpdate(id, filtered, {
+      returnDocument: "after",
+      runValidators: true,
+    }).select("-password");
+
+    return sanitize(user);
+  } catch (err) {
+    if (err.code === 11000) {
+      const field = Object.keys(err.keyPattern || {})[0] || "field";
+      const error = new Error(
+        field === "email"
+          ? "This email is already associated with an account."
+          : "This username already exists."
+      );
+      error.statusCode = 409;
+      error.code = 11000;
+      throw error;
+    }
+    throw err;
+  }
 };
 
 export const changePassword = async (id, hashedPassword) => {

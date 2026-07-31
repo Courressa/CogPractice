@@ -15,7 +15,14 @@ export default async function connectDB() {
     globalCache.promise = mongoose.connect(process.env.MONGODB_URI);
   }
 
-  globalCache.conn = await globalCache.promise;
-  console.log("MongoDB connected");
-  return globalCache.conn;
+  try {
+    globalCache.conn = await globalCache.promise;
+    console.log("MongoDB connected");
+    return globalCache.conn;
+  } catch (err) {
+    // Allow a later invocation to retry after a failed cold-start connect
+    globalCache.promise = null;
+    globalCache.conn = null;
+    throw err;
+  }
 }

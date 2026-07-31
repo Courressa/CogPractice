@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export function ownerOnlyMiddleware(req, res, next) {
     const id = req.params.id;
     

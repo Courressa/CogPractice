@@ -4,6 +4,11 @@ const secretKey = process.env.JWT_SECRET;
 
 export function authMiddleware(req, res, next) {
     try {
+        if (!secretKey) {
+            console.error("JWT_SECRET is not defined in environment variables");
+            return res.status(500).json({ message: "Server configuration error" });
+        }
+
         const authHeader = req.headers.authorization;
         
         // Check if the Authorization header is present and starts with "Bearer "
