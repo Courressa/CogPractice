@@ -18,6 +18,9 @@ app.use("/api/v1", healthRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/customers", customerRouter);
 
+// Required for Lambda (server/lambda.js)
+export default app;
+
 // Local only (Lambda sets LAMBDA_TASK_ROOT)
 if (!process.env.LAMBDA_TASK_ROOT) {
   (async () => {
