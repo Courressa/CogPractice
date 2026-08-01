@@ -11,7 +11,12 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // ===== CORS CONFIG =====
-app.use(cors({ origin: true }));
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "http://student-courressamalcolm-bank-frontend.s3-website-us-east-1.amazonaws.com"
+  ],
+}));
 
 
 app.use("/api/v1", healthRouter);
