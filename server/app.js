@@ -17,7 +17,30 @@ app.use(cors({
   ],
 }));
 
-app.use(express.json());
+// Parse JSON
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true }));
+
+// Lambda safety: if body arrived as a string/Buffer, parse it
+app.use((req, res, next) => {
+  if (req.body == null || req.body === "") {
+    req.body = {};
+  } else if (Buffer.isBuffer(req.body)) {
+    try {
+      req.body = JSON.parse(req.body.toString("utf8"));
+    } catch {
+      req.body = {};
+    }
+  } else if (typeof req.body === "string") {
+    try {
+      req.body = JSON.parse(req.body);
+    } catch {
+      // leave as-is
+    }
+  }
+  next();
+});
+
 app.use("/api/v1", healthRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/customers", customerRouter);
