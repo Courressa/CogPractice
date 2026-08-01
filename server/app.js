@@ -8,7 +8,6 @@ import connectDB from "./config/database.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.use(express.json());
 
 // ===== CORS CONFIG =====
 app.use(cors({
@@ -18,7 +17,7 @@ app.use(cors({
   ],
 }));
 
-
+app.use(express.json());
 app.use("/api/v1", healthRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/customers", customerRouter);

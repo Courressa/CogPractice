@@ -26,17 +26,32 @@ export const registerCustomer = async (data) => {
     // Hash password before saving
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-    const payload = await save({
-        username,
-        email,
-        ...otherData,
-        password: hashedPassword,
-        isAdmin: false
-    });
+    try {
+        const payload = await save({
+            username,
+            email,
+            ...otherData,
+            password: hashedPassword,
+            isAdmin: false
+        });
 
-    return {
-        message: "User created successfully.",
-        user: payload
+        return {
+            message: "User created successfully.",
+            user: payload
+        };
+    } catch (err) {
+        // Handle race condition on unique username/email indexes
+        if (err.code === 11000) {
+            const field = Object.keys(err.keyPattern || {})[0] || "field";
+            const error = new Error(
+                field === "email"
+                    ? "This email is already associated with an account."
+                    : "This username already exists."
+            );
+            error.statusCode = 409;
+            throw error;
+        }
+        throw err;
     }
 }
 
@@ -44,8 +59,9 @@ export const registerCustomer = async (data) => {
 const authenticateUser = async (username, password) => {
     const user = await findByUsername(username);
 
+    // Same message for missing user and wrong password (avoid username enumeration)
     if (!user) {
-        const error = new Error("User not found");
+        const error = new Error("Invalid login credentials");
         error.statusCode = 401;
         throw error;
     }
