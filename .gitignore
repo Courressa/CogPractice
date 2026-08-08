@@ -1,5 +1,9 @@
-readLineTest.js
-
-/node_modules
-
+node_modules/
+dist/
 .env
+*.zip
+out.json
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
