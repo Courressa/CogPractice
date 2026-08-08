@@ -103,6 +103,7 @@ resource "aws_api_gateway_integration" "lambda_root" {
   uri                     = aws_lambda_function.api.invoke_arn
 }
 
+# Deployment (no stage_name)
 resource "aws_api_gateway_deployment" "api" {
   depends_on = [
     aws_api_gateway_integration.lambda,
@@ -110,7 +111,27 @@ resource "aws_api_gateway_deployment" "api" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.api.id
-  stage_name  = "prod"
+
+  triggers = {
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_resource.proxy.id,
+      aws_api_gateway_method.proxy.id,
+      aws_api_gateway_integration.lambda.id,
+      aws_api_gateway_method.proxy_root.id,
+      aws_api_gateway_integration.lambda_root.id,
+    ]))
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Separate stage (modern way)
+resource "aws_api_gateway_stage" "prod" {
+  deployment_id = aws_api_gateway_deployment.api.id
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  stage_name    = "prod"
 }
 
 # Allow API Gateway to invoke the Lambda
