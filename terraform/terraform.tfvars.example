@@ -1,0 +1,2 @@
+mongodb_uri = "your-real-mongodb-uri-here"
+jwt_secret  = "your-real-jwt-secret-here"
